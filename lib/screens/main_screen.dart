@@ -53,21 +53,7 @@ class _MainScreenState extends State<MainScreen> {
                   icon: Icon(section.icon),
                   label: section.label,
                 )),
-            BottomNavigationBarItem(
-              icon: Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey.shade300,
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Icon(Icons.add, size: 16, color: Colors.grey.shade300),
-              ),
-              label: 'Bientôt',
-            ),
+            //Ici pour rajouter des sections
           ],
         ),
       ),

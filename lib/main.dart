@@ -6,6 +6,18 @@ import 'blocs/scan/scan_bloc.dart';
 import 'blocs/profile/profile_bloc.dart';
 import 'blocs/programs/programs_bloc.dart';
 import 'screens/main_screen.dart';
+import 'package:device_preview/device_preview.dart';
+
+void main() {
+  runApp(
+    DevicePreview(
+      enabled: true,
+      builder: (context) => const MyApp(),
+      defaultDevice: Devices
+          .android.samsungGalaxyS25, // ici tu choisis ton device par défaut
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
