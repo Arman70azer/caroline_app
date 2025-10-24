@@ -1,8 +1,8 @@
 # application_nutrition
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.13-blue?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.35.7-blue?logo=flutter&logoColor=white)](https://flutter.dev)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-[![Build](https://img.shields.io/github/actions/workflow/status/ton_utilisateur/ton_repo/flutter.yml?branch=main)](https://github.com/ton_utilisateur/ton_repo/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/Arman70azer/caroline_app/flutter.yml?branch=main)](https://github.com/Arman70azer/caroline_app/actions)
 
 ---
 
