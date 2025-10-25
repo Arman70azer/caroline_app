@@ -4,6 +4,7 @@ import '../blocs/scan/scan_bloc.dart';
 import '../blocs/scan/scan_event.dart';
 import '../blocs/scan/scan_state.dart';
 import '../widgets/nutrient_card.dart';
+import '../widgets/compact_header.dart';
 
 class ScanScreen extends StatelessWidget {
   const ScanScreen({super.key});
@@ -21,29 +22,7 @@ class ScanScreen extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'NutriSport',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    'Votre coach santé personnel',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.green.shade100,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            const CompactHeader(),
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(

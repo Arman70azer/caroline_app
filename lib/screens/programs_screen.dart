@@ -4,6 +4,7 @@ import '../blocs/programs/programs_bloc.dart';
 import '../blocs/programs/programs_event.dart';
 import '../blocs/programs/programs_state.dart';
 import '../widgets/program_card.dart';
+import '../widgets/compact_header.dart';
 
 class ProgramsScreen extends StatelessWidget {
   const ProgramsScreen({super.key});
@@ -21,21 +22,7 @@ class ProgramsScreen extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('NutriSport',
-                      style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
-                  Text('Votre coach santé personnel',
-                      style: TextStyle(fontSize: 14, color: Colors.white70)),
-                ],
-              ),
-            ),
+            const CompactHeader(),
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(

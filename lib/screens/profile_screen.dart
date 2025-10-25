@@ -5,6 +5,7 @@ import '../blocs/profile/profile_event.dart';
 import '../blocs/profile/profile_state.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/progress_bar.dart';
+import '../widgets/compact_header.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -22,21 +23,7 @@ class ProfileScreen extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('NutriSport',
-                      style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
-                  Text('Votre coach santé personnel',
-                      style: TextStyle(fontSize: 14, color: Colors.white70)),
-                ],
-              ),
-            ),
+            const CompactHeader(),
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
@@ -127,13 +114,6 @@ class ProfileScreen extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
                                       children: [
-                                        StatCard(
-                                            value:
-                                                '${state.profile.caloriesConsumed}',
-                                            label: 'Calories'),
-                                        StatCard(
-                                            value: state.profile.exerciseTime,
-                                            label: 'Exercice'),
                                         StatCard(
                                             value: state.profile.waterIntake,
                                             label: 'Eau'),
