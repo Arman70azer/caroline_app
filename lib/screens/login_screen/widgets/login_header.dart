@@ -8,14 +8,13 @@ class LoginHeader extends StatelessWidget {
     return const Column(
       children: [
         Text(
-          'NutriSport',
+          'Caroline',
           style: TextStyle(
             fontSize: 36,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),
-        SizedBox(height: 8),
         Text(
           'Votre coach santé personnel',
           style: TextStyle(

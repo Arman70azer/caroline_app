@@ -33,9 +33,9 @@ class LoginScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
                   LoginLogo(),
-                  SizedBox(height: 32),
+                  SizedBox(height: 8),
                   LoginHeader(),
-                  SizedBox(height: 48),
+                  SizedBox(height: 16),
                   LoginForm(),
                   SizedBox(height: 24),
                   LoginTestCredentials(),

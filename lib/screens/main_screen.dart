@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/app_sections.dart';
-import 'scan_screen.dart';
+import 'scan_screen/scan_screen.dart';
 import 'profile_screen.dart';
 import 'programs_screen.dart';
 

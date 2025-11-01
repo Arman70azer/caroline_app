@@ -8,16 +8,9 @@ import 'blocs/profile/profile_bloc.dart';
 import 'blocs/programs/programs_bloc.dart';
 import 'blocs/login/login_bloc.dart';
 import 'blocs/login/login_event.dart';
-import 'package:device_preview/device_preview.dart';
 
 void main() {
-  runApp(
-    DevicePreview(
-      enabled: true,
-      builder: (context) => const MyApp(),
-      defaultDevice: Devices.android.samsungGalaxyS25,
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
