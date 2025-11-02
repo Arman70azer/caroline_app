@@ -31,7 +31,8 @@ class ScanFooter extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.only(top: 16),
         child: Text(
-          state.toString(),
+          (state as ScanError)
+              .message, // ← FIX: Utiliser .message au lieu de .toString()
           style: const TextStyle(
             color: Colors.red,
             fontSize: 14,

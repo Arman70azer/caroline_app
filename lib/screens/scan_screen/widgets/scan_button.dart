@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/scan/scan_bloc.dart';
 import '../../../blocs/scan/scan_event.dart';
 import '../../../blocs/scan/scan_state.dart';
+import '../../../models/portion_size.dart';
+import 'portion_selector_dialog.dart';
 
 /// Bouton pour déclencher le scan d'aliment
 ///
@@ -42,17 +44,32 @@ class ScanButton extends StatelessWidget {
   }
 
   /// Gère l'action du bouton selon l'état actuel
-  void _handleScan(BuildContext context) {
+  Future<void> _handleScan(BuildContext context) async {
     if (state is ScanSuccess) {
-      // Reset puis nouveau scan
+      // Reset puis nouveau scan avec dialogue
       context.read<ScanBloc>().add(ResetScan());
-      Future.delayed(
-        const Duration(milliseconds: 100),
-        () => context.read<ScanBloc>().add(ScanFood()),
-      );
+      await Future.delayed(const Duration(milliseconds: 100));
+      await _showPortionDialogAndScan(context);
     } else {
-      // Nouveau scan
-      context.read<ScanBloc>().add(ScanFood());
+      // Afficher le dialogue puis scanner
+      await _showPortionDialogAndScan(context);
+    }
+  }
+
+  /// Affiche le dialogue de sélection de portion et lance le scan
+  Future<void> _showPortionDialogAndScan(BuildContext context) async {
+    final portionInfo = await showDialog<PortionInfo>(
+      context: context,
+      builder: (context) => const PortionSelectorDialog(),
+    );
+
+    // Si l'utilisateur a confirmé une portion, lancer le scan
+    if (portionInfo != null && portionInfo.isValid) {
+      if (context.mounted) {
+        context.read<ScanBloc>().add(
+              ScanFood(recipientSize: portionInfo.multiplier),
+            );
+      }
     }
   }
 

@@ -40,17 +40,24 @@ class ScanScreen extends StatelessWidget {
                 ),
                 child: BlocBuilder<ScanBloc, ScanState>(
                   builder: (context, state) {
-                    return Center(
+                    return SingleChildScrollView(
+                      // ← FIX: Permet le scroll
                       child: Padding(
                         padding: const EdgeInsets.all(24.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ScanContainer(state: state),
-                            const SizedBox(height: 40),
-                            ScanButton(state: state),
-                            ScanFooter(state: state),
-                          ],
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: MediaQuery.of(context).size.height -
+                                200, // ← Hauteur minimum
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ScanContainer(state: state),
+                              const SizedBox(height: 40),
+                              ScanButton(state: state),
+                              ScanFooter(state: state),
+                            ],
+                          ),
                         ),
                       ),
                     );
