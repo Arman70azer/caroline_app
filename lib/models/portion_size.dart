@@ -31,17 +31,20 @@ enum PlateSize {
 /// Classe pour stocker les informations de portion
 class PortionInfo {
   final PlateSize? plateSize;
-  final double? weight; // Poids en grammes
+  final double? weight;
+  final String? productName;
+  final List<String>? productNames; // Liste des produits
 
   const PortionInfo({
     this.plateSize,
     this.weight,
+    this.productName,
+    this.productNames,
   });
 
   /// Retourne le multiplicateur à utiliser pour les calculs nutritionnels
   double get multiplier {
     if (weight != null) {
-      // Si un poids est renseigné, on utilise un ratio basé sur 100g
       return weight! / 100.0;
     }
     return plateSize?.multiplier ?? 1.0;
@@ -52,10 +55,40 @@ class PortionInfo {
   PortionInfo copyWith({
     PlateSize? plateSize,
     double? weight,
+    String? productName,
+    List<String>? productNames,
   }) {
     return PortionInfo(
       plateSize: plateSize ?? this.plateSize,
       weight: weight ?? this.weight,
+      productName: productName ?? this.productName,
+      productNames: productNames ?? this.productNames,
     );
+  }
+
+  /// Conversion en Map pour l'envoi à l'API
+  Map<String, String> toFields() {
+    return {
+      if (plateSize != null) 'plate_size': plateSize!.name,
+      if (weight != null) 'weight_grams': weight.toString(),
+      if (productName != null) 'product_name': productName!,
+      if (productNames != null && productNames!.isNotEmpty)
+        'product_names': productNames!.join(','),
+      'multiplier': multiplier.toString(),
+      'portion_type': weight != null ? 'weight' : 'plate',
+    };
+  }
+
+  /// Conversion en Map pour l'envoi JSON
+  Map<String, dynamic> toJson() {
+    return {
+      if (plateSize != null) 'plate_size': plateSize!.name,
+      if (weight != null) 'weight_grams': weight,
+      if (productName != null) 'product_name': productName,
+      if (productNames != null && productNames!.isNotEmpty)
+        'product_names': productNames,
+      'multiplier': multiplier,
+      'portion_type': weight != null ? 'weight' : 'plate',
+    };
   }
 }

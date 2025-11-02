@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/scan/scan_bloc.dart';
-import '../../blocs/scan/scan_event.dart';
 import '../../blocs/scan/scan_state.dart';
+import '../../models/food_info.dart';
 import '../../widgets/compact_header.dart';
 import 'widgets/container/scan_container.dart';
 import 'widgets/scan_button.dart';
 import 'widgets/scan_footer.dart';
+import 'widgets/scanned_food_list_widget.dart';
 
-/// Écran principal de scan d'aliments
-///
-/// Cet écran permet à l'utilisateur de scanner des aliments
-/// et d'afficher leurs informations nutritionnelles
 class ScanScreen extends StatelessWidget {
   const ScanScreen({super.key});
 
@@ -40,25 +37,19 @@ class ScanScreen extends StatelessWidget {
                 ),
                 child: BlocBuilder<ScanBloc, ScanState>(
                   builder: (context, state) {
+                    final scannedFoods = _getScannedFoods(state);
+
                     return SingleChildScrollView(
-                      // ← FIX: Permet le scroll
-                      child: Padding(
-                        padding: const EdgeInsets.all(24.0),
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: MediaQuery.of(context).size.height -
-                                200, // ← Hauteur minimum
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ScanContainer(state: state),
-                              const SizedBox(height: 40),
-                              ScanButton(state: state),
-                              ScanFooter(state: state),
-                            ],
-                          ),
-                        ),
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ScanContainer(state: state),
+                          const SizedBox(height: 40),
+                          ScanButton(state: state),
+                          ScanFooter(state: state),
+                          ScannedFoodListWidget(foods: scannedFoods),
+                        ],
                       ),
                     );
                   },
@@ -69,5 +60,13 @@ class ScanScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<FoodInfo> _getScannedFoods(ScanState state) {
+    if (state is ScanInitial) return state.scannedFoods;
+    if (state is ScanLoading) return state.scannedFoods;
+    if (state is ScanSuccess) return state.scannedFoods;
+    if (state is ScanError) return state.scannedFoods;
+    return [];
   }
 }

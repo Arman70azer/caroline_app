@@ -2,16 +2,28 @@ import '../../models/food_info.dart';
 
 abstract class ScanState {}
 
-class ScanInitial extends ScanState {}
+class ScanInitial extends ScanState {
+  final List<FoodInfo> scannedFoods;
 
-class ScanLoading extends ScanState {}
+  ScanInitial({this.scannedFoods = const []});
+}
+
+class ScanLoading extends ScanState {
+  final List<FoodInfo> scannedFoods;
+
+  ScanLoading({this.scannedFoods = const []});
+}
 
 class ScanSuccess extends ScanState {
   final FoodInfo food;
-  ScanSuccess(this.food);
+  final List<FoodInfo> scannedFoods;
+
+  ScanSuccess(this.food, {this.scannedFoods = const []});
 }
 
 class ScanError extends ScanState {
   final String message;
-  ScanError(this.message);
+  final List<FoodInfo> scannedFoods;
+
+  ScanError(this.message, {this.scannedFoods = const []});
 }

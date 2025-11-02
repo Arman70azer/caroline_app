@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../blocs/scan/scan_state.dart';
 
-/// Footer affichant des informations selon l'état du scan
-///
-/// Affiche l'URL de l'API en cas de succès ou un message d'erreur
 class ScanFooter extends StatelessWidget {
   final ScanState state;
 
@@ -31,8 +28,7 @@ class ScanFooter extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.only(top: 16),
         child: Text(
-          (state as ScanError)
-              .message, // ← FIX: Utiliser .message au lieu de .toString()
+          (state as ScanError).message,
           style: const TextStyle(
             color: Colors.red,
             fontSize: 14,

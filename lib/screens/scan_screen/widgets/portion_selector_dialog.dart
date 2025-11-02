@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../models/portion_size.dart';
 
-/// Dialogue pour sélectionner la taille de la portion
 class PortionSelectorDialog extends StatefulWidget {
   const PortionSelectorDialog({super.key});
 
@@ -13,12 +12,32 @@ class PortionSelectorDialog extends StatefulWidget {
 class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
   PlateSize? _selectedPlateSize;
   final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _productNameController = TextEditingController();
   bool _useWeight = false;
+  bool _useManualEntry = false;
+  final List<String> _productNames = []; // Liste des produits ajoutés
 
   @override
   void dispose() {
     _weightController.dispose();
+    _productNameController.dispose();
     super.dispose();
+  }
+
+  void _addProduct() {
+    final productName = _productNameController.text.trim();
+    if (productName.isNotEmpty && !_productNames.contains(productName)) {
+      setState(() {
+        _productNames.add(productName);
+        _productNameController.clear();
+      });
+    }
+  }
+
+  void _removeProduct(int index) {
+    setState(() {
+      _productNames.removeAt(index);
+    });
   }
 
   @override
@@ -28,14 +47,12 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
         borderRadius: BorderRadius.circular(20),
       ),
       child: SingleChildScrollView(
-        // ← FIX OVERFLOW
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Titre
               Text(
                 'Quelle est la quantité ?',
                 style: TextStyle(
@@ -47,7 +64,117 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
               ),
               const SizedBox(height: 24),
 
-              // Sélecteur de taille d'assiette
+              // Switch saisie manuelle
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Saisie manuelle du produit',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Switch(
+                    value: _useManualEntry,
+                    onChanged: (value) {
+                      setState(() {
+                        _useManualEntry = value;
+                      });
+                    },
+                    activeColor: Colors.green.shade600,
+                  ),
+                ],
+              ),
+
+              // Champ nom du produit
+              if (_useManualEntry) ...[
+                const SizedBox(height: 16),
+                Text(
+                  'Nom du produit',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _productNameController,
+                        textCapitalization: TextCapitalization.words,
+                        onChanged: (value) {
+                          setState(() {});
+                        },
+                        onSubmitted: (value) => _addProduct(),
+                        decoration: InputDecoration(
+                          hintText: 'Ex: Pomme Golden',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide:
+                                BorderSide(color: Colors.green.shade300),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                                color: Colors.green.shade600, width: 2),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      onPressed: _productNameController.text.trim().isEmpty
+                          ? null
+                          : _addProduct,
+                      icon: Icon(
+                        Icons.add_circle,
+                        color: _productNameController.text.trim().isEmpty
+                            ? Colors.grey.shade400
+                            : Colors.green.shade600,
+                        size: 32,
+                      ),
+                    ),
+                  ],
+                ),
+
+                // Affichage des tags
+                if (_productNames.isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: _productNames.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final name = entry.value;
+                      return Chip(
+                        label: Text(name),
+                        deleteIcon: const Icon(Icons.close, size: 18),
+                        onDeleted: () => _removeProduct(index),
+                        backgroundColor: Colors.green.shade50,
+                        deleteIconColor: Colors.green.shade700,
+                        labelStyle: TextStyle(
+                          color: Colors.green.shade800,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        side: BorderSide(color: Colors.green.shade300),
+                      );
+                    }).toList(),
+                  ),
+                ],
+                const SizedBox(height: 16),
+              ],
+
+              const SizedBox(height: 8),
+
+              // Sélecteur assiettes
               if (!_useWeight) ...[
                 Text(
                   'Taille de l\'assiette',
@@ -62,7 +189,7 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
                 const SizedBox(height: 16),
               ],
 
-              // Option pour entrer le poids
+              // Champ poids
               if (_useWeight) ...[
                 Text(
                   'Poids (en grammes)',
@@ -80,8 +207,7 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
                     FilteringTextInputFormatter.digitsOnly,
                   ],
                   onChanged: (value) {
-                    setState(
-                        () {}); // ← FIX VALIDATION : Refresh l'état quand le texte change
+                    setState(() {});
                   },
                   decoration: InputDecoration(
                     hintText: 'Ex: 150',
@@ -104,7 +230,7 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
                 const SizedBox(height: 16),
               ],
 
-              // Switch pour alterner entre assiette et poids
+              // Switch assiette/poids
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -137,7 +263,7 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
 
               const SizedBox(height: 24),
 
-              // Boutons d'action
+              // Boutons
               Row(
                 children: [
                   Expanded(
@@ -267,8 +393,11 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
   }
 
   bool _isValid() {
+    if (_useManualEntry && _productNames.isEmpty) {
+      return false;
+    }
+
     if (_useWeight) {
-      // Validation améliorée pour le poids
       final text = _weightController.text.trim();
       if (text.isEmpty) return false;
       final weight = int.tryParse(text);
@@ -283,6 +412,10 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
       weight: _useWeight && _weightController.text.isNotEmpty
           ? double.parse(_weightController.text)
           : null,
+      productName: _useManualEntry && _productNames.isNotEmpty
+          ? _productNames.join(', ')
+          : null,
+      productNames: _useManualEntry ? _productNames : null,
     );
     Navigator.of(context).pop(portionInfo);
   }
