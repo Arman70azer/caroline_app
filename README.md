@@ -46,8 +46,8 @@ Si c’est votre premier projet Flutter, consultez :
 
 1. Cloner le dépôt :  
 ```bash
-git clone https://github.com/ton_utilisateur/ton_repo.git
-cd ton_repo
+git clone https://github.com/Arman70azer/caroline_app.git
+cd caroline_app
 flutter pub get
 flutter run
 ```
