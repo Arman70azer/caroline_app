@@ -1,3 +1,4 @@
+import 'package:application_nutrition/config/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/login/login_bloc.dart';
@@ -22,7 +23,7 @@ class CompactHeader extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: AppColors.surface,
                 ),
               ),
               Text(

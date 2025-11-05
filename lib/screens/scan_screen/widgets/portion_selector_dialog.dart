@@ -83,7 +83,7 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
                         _useManualEntry = value;
                       });
                     },
-                    activeColor: Colors.green.shade600,
+                    activeThumbColor: Colors.green.shade600,
                   ),
                 ],
               ),
@@ -256,7 +256,7 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
                         }
                       });
                     },
-                    activeColor: Colors.green.shade600,
+                    activeThumbColor: Colors.green.shade600,
                   ),
                 ],
               ),
