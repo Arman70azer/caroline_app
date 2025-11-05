@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/login/login_bloc.dart';
 import '../../blocs/login/login_state.dart';
+import '../../config/colors.dart';
 import '../../screens/login_screen/widgets/login_background.dart';
 import '../../screens/login_screen/widgets/login_logo.dart';
 import '../../screens/login_screen/widgets/login_header.dart';
@@ -20,7 +21,7 @@ class LoginScreen extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: Colors.red,
+                backgroundColor: AppColors.error,
               ),
             );
           }

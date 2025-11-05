@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../config/colors.dart';
 
 class LoginBackground extends StatelessWidget {
   final Widget child;
@@ -11,11 +12,17 @@ class LoginBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
+        // Dégradé chaleureux vert vers orange
         gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Colors.green.shade600, Colors.green.shade500],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.primaryGreen,
+            AppColors.limeGreen,
+            AppColors.lightGreen,
+          ],
+          stops: [0.0, 0.5, 1.0],
         ),
       ),
       child: SafeArea(

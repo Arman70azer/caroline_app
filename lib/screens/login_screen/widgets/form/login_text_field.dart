@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../config/colors.dart';
 
 class LoginTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -26,13 +27,16 @@ class _LoginTextFieldState extends State<LoginTextField> {
     return TextField(
       controller: widget.controller,
       obscureText: widget.isPassword && _obscureText,
+      style: TextStyle(color: AppColors.textPrimary),
       decoration: InputDecoration(
         labelText: widget.label,
-        prefixIcon: Icon(widget.icon),
+        labelStyle: TextStyle(color: AppColors.textSecondary),
+        prefixIcon: Icon(widget.icon, color: AppColors.primaryGreen),
         suffixIcon: widget.isPassword
             ? IconButton(
                 icon: Icon(
                   _obscureText ? Icons.visibility : Icons.visibility_off,
+                  color: AppColors.darkGrey,
                 ),
                 onPressed: () {
                   setState(() {
@@ -43,9 +47,18 @@ class _LoginTextFieldState extends State<LoginTextField> {
             : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.mediumGrey),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.mediumGrey),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.primaryGreen, width: 2),
         ),
         filled: true,
-        fillColor: Colors.grey.shade50,
+        fillColor: AppColors.lightGrey,
       ),
     );
   }
