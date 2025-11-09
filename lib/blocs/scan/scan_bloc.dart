@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../blocs/token.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -22,16 +22,6 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
     on<RemoveFoodFromList>(_onRemoveFoodFromList);
     on<ClearFoodList>(_onClearFoodList);
     on<ResetScan>(_onResetScan);
-  }
-
-  /// Récupère le token d'authentification
-  Future<String?> _getAuthToken() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      return prefs.getString('auth_token');
-    } catch (e) {
-      return null;
-    }
   }
 
   Future<void> _onScanFood(ScanFood event, Emitter<ScanState> emit) async {
@@ -73,7 +63,7 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
     }
 
     // Récupérer le token
-    final token = await _getAuthToken();
+    final token = await getAuthToken();
     if (token == null) {
       emit(ScanError('Vous devez être connecté pour scanner',
           scannedFoods: _currentList));
@@ -116,7 +106,7 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
   Future<void> _scanManualProduct(
       PortionInfo portionInfo, Emitter<ScanState> emit) async {
     // Récupérer le token
-    final token = await _getAuthToken();
+    final token = await getAuthToken();
     if (token == null) {
       emit(ScanError('Vous devez être connecté pour scanner',
           scannedFoods: _currentList));

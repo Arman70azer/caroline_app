@@ -13,6 +13,9 @@ class ApiConfig {
   static const String scanManualEndpoint = '/client/scan/manual';
   static const String scanManualBatchEndpoint = '/client/scan/manual/batch';
 
+  // Endpoints profil
+  static const String profileEndpoint = '/client/profil';
+
   // URL complète pour le login
   static String get loginUrl => '$baseUrl$loginEndpoint';
 
@@ -21,9 +24,14 @@ class ApiConfig {
   static String get scanManualUrl => '$baseUrl$scanManualEndpoint';
   static String get scanManualBatchUrl => '$baseUrl$scanManualBatchEndpoint';
 
+  // URL complète pour le profil
+  static String get profileUrl => '$baseUrl$profileEndpoint';
+
   // Timeout pour les requêtes (en secondes)
   static const int requestTimeout = 30;
 
   // Qualité de compression de l'image (0-100)
   static const int imageQuality = 85;
+
+  static const String tokenKey = 'auth_token';
 }

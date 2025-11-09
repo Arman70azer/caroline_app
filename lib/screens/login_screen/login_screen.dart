@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/login/login_bloc.dart';
 import '../../blocs/login/login_state.dart';
-import '../../screens/login_screen/widgets/login_background.dart';
-import '../../screens/login_screen/widgets/login_logo.dart';
-import '../../screens/login_screen/widgets/login_header.dart';
-import '../../screens/login_screen/widgets/form/login_form.dart';
+import 'widgets/login_widgets.dart';
 import '../../widgets/app_notification.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -39,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                    LoginLogo(),
+                    // LoginLogo(),
                     SizedBox(height: 8),
                     LoginHeader(),
                     SizedBox(height: 16),
