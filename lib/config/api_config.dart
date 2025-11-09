@@ -15,6 +15,8 @@ class ApiConfig {
 
   // Endpoints profil
   static const String profileEndpoint = '/client/profil';
+  static const String editProfileEndpoint = '/client/editUser';
+  static const String createGoalEndpoint = "/client/createGoal";
 
   // URL complète pour le login
   static String get loginUrl => '$baseUrl$loginEndpoint';
@@ -26,6 +28,8 @@ class ApiConfig {
 
   // URL complète pour le profil
   static String get profileUrl => '$baseUrl$profileEndpoint';
+  static String get editProfileUrl => '$baseUrl$editProfileEndpoint';
+  static String get createGoalUrl => '$baseUrl$createGoalEndpoint';
 
   // Timeout pour les requêtes (en secondes)
   static const int requestTimeout = 30;

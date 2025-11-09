@@ -8,3 +8,4 @@ export 'goals/profile_goals_card.dart';
 export 'profile_edit_button.dart';
 export 'profile_loading.dart';
 export 'profile_error.dart';
+export 'edit_screen/profile_edit_modal.dart';

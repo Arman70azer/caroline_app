@@ -1,9 +1,10 @@
+import 'package:application_nutrition/screens/profile_screen/widgets/goals_edit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../blocs/profile/profile_bloc.dart';
-import '../../../blocs/profile/profile_event.dart';
-import '../../../blocs/profile/profile_state.dart';
-import '../../../widgets/compact_header.dart';
+import '../../blocs/profile/profile_bloc.dart';
+import '../../blocs/profile/profile_event.dart';
+import '../../blocs/profile/profile_state.dart';
+import '../../widgets/compact_header.dart';
 import 'widgets/profile_widgets.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -79,7 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Column(
                             children: [
                               // Avatar
-                              ProfileAvatar(genderIcon: profile.genderIcon),
+                              ProfileAvatar(gender: profile.gender),
                               const SizedBox(height: 16),
 
                               // Nom et infos de base
@@ -98,21 +99,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               if (profile.goals.isNotEmpty)
                                 ProfileGoalsCard(profile: profile),
 
-                              const SizedBox(height: 16),
+                              if (profile.goals.isNotEmpty)
+                                const SizedBox(height: 16),
 
-                              // Bouton de modification
-                              ProfileEditButton(
-                                onPressed: () {
-                                  // TODO: Naviguer vers l'écran d'édition
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Modification du profil - À venir',
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                              Column(
+                                children: [
+                                  // Bouton de modification du profil
+                                  ProfileEditButton(profile: profile),
+
+                                  const SizedBox(height: 12),
+
+                                  // Bouton de gestion des objectifs
+                                  GoalsEditButton(profile: profile),
+                                ],
+                              )
                             ],
                           ),
                         ),

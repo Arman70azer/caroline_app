@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../../models/user_profile.dart';
-import 'edit_screen/profile_edit_modal.dart';
+import '../widgets/goals_modal/goals_edit_modal.dart';
 
-class ProfileEditButton extends StatelessWidget {
+class GoalsEditButton extends StatelessWidget {
   final UserProfile profile;
 
-  const ProfileEditButton({
+  const GoalsEditButton({
     super.key,
     required this.profile,
   });
@@ -18,16 +18,16 @@ class ProfileEditButton extends StatelessWidget {
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (modalContext) => ProfileEditModal(
+          builder: (modalContext) => GoalsEditModal(
             profile: profile,
             parentContext: context,
           ),
         );
       },
       style: OutlinedButton.styleFrom(
-        foregroundColor: Colors.green.shade600,
+        foregroundColor: Colors.orange.shade600,
         side: BorderSide(
-          color: Colors.green.shade600,
+          color: Colors.orange.shade600,
           width: 2,
         ),
         padding: const EdgeInsets.symmetric(
@@ -38,8 +38,8 @@ class ProfileEditButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-      icon: const Icon(Icons.edit),
-      label: const Text('Modifier mon profil'),
+      icon: const Icon(Icons.flag),
+      label: const Text('Gérer mes objectifs'),
     );
   }
 }
