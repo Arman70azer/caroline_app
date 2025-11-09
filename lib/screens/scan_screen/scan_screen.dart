@@ -4,14 +4,20 @@ import '../../blocs/scan/scan_bloc.dart';
 import '../../blocs/scan/scan_state.dart';
 import '../../models/food_info.dart';
 import '../../widgets/compact_header.dart';
+import '../../widgets/app_notification.dart';
 import 'widgets/container/scan_container.dart';
 import 'widgets/scan_button.dart';
 import 'widgets/scan_footer.dart';
 import 'widgets/scanned_food_list_widget.dart';
 
-class ScanScreen extends StatelessWidget {
+class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
 
+  @override
+  State<ScanScreen> createState() => _ScanScreenState();
+}
+
+class _ScanScreenState extends State<ScanScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,24 +41,40 @@ class ScanScreen extends StatelessWidget {
                     topRight: Radius.circular(30),
                   ),
                 ),
-                child: BlocBuilder<ScanBloc, ScanState>(
-                  builder: (context, state) {
-                    final scannedFoods = _getScannedFoods(state);
-
-                    return SingleChildScrollView(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ScanContainer(state: state),
-                          const SizedBox(height: 40),
-                          ScanButton(state: state),
-                          ScanFooter(state: state),
-                          ScannedFoodListWidget(foods: scannedFoods),
-                        ],
-                      ),
-                    );
+                child: BlocListener<ScanBloc, ScanState>(
+                  // Listener pour les notifications (ne rebuild pas le widget)
+                  listener: (context, state) {
+                    if (state is ScanError) {
+                      // Afficher l'erreur avec AppNotification
+                      AppNotification.showError(context, state.message);
+                    } else if (state is ScanSuccess) {
+                      // Afficher le succès
+                      AppNotification.showSuccess(
+                        context,
+                        '✅ ${state.food.name} scanné avec succès !',
+                      );
+                    }
                   },
+                  // Builder pour reconstruire l'UI
+                  child: BlocBuilder<ScanBloc, ScanState>(
+                    builder: (context, state) {
+                      final scannedFoods = _getScannedFoods(state);
+
+                      return SingleChildScrollView(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ScanContainer(state: state),
+                            const SizedBox(height: 40),
+                            ScanButton(state: state),
+                            ScanFooter(state: state),
+                            ScannedFoodListWidget(foods: scannedFoods),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
