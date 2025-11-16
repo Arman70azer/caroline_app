@@ -10,7 +10,6 @@ class PortionSelectorDialog extends StatefulWidget {
 }
 
 class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
-  PlateSize? _selectedPlateSize;
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _productNameController = TextEditingController();
   bool _useWeight = false;
@@ -53,44 +52,67 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                'Quelle est la quantité ?',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green.shade800,
-                ),
-                textAlign: TextAlign.center,
+              // Titre
+              Row(
+                children: [
+                  Icon(Icons.restaurant_menu, color: Colors.green.shade600),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Scanner un aliment',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green.shade800,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 24),
 
               // Switch saisie manuelle
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Saisie manuelle du produit',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey.shade600,
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.green.shade200),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.edit, color: Colors.green.shade600, size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Saisie manuelle du produit',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey.shade700,
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Switch(
-                    value: _useManualEntry,
-                    onChanged: (value) {
-                      setState(() {
-                        _useManualEntry = value;
-                      });
-                    },
-                    activeThumbColor: Colors.green.shade600,
-                  ),
-                ],
+                    Switch(
+                      value: _useManualEntry,
+                      onChanged: (value) {
+                        setState(() {
+                          _useManualEntry = value;
+                          if (!value) {
+                            _productNames.clear();
+                            _productNameController.clear();
+                          }
+                        });
+                      },
+                      activeColor: Colors.green.shade600,
+                    ),
+                  ],
+                ),
               ),
 
-              // Champ nom du produit
+              // Section saisie manuelle
               if (_useManualEntry) ...[
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 Text(
                   'Nom du produit',
                   style: TextStyle(
@@ -106,12 +128,12 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
                       child: TextField(
                         controller: _productNameController,
                         textCapitalization: TextCapitalization.words,
-                        onChanged: (value) {
-                          setState(() {});
-                        },
+                        onChanged: (value) => setState(() {}),
                         onSubmitted: (value) => _addProduct(),
                         decoration: InputDecoration(
                           hintText: 'Ex: Pomme Golden',
+                          prefixIcon:
+                              Icon(Icons.search, color: Colors.green.shade600),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide:
@@ -169,28 +191,55 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
                     }).toList(),
                   ),
                 ],
-                const SizedBox(height: 16),
               ],
 
-              const SizedBox(height: 8),
-
-              // Sélecteur assiettes
-              if (!_useWeight) ...[
-                Text(
-                  'Taille de l\'assiette',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey.shade700,
+              // Section poids (optionnel)
+              if (!_useManualEntry || _productNames.isNotEmpty) ...[
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.blue.shade200),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.monitor_weight,
+                          color: Colors.blue.shade600, size: 20),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          _useManualEntry
+                              ? 'J\'ai pesé mon aliment (optionnel)'
+                              : 'J\'ai pesé mon aliment',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                      ),
+                      Switch(
+                        value: _useWeight,
+                        onChanged: (value) {
+                          setState(() {
+                            _useWeight = value;
+                            if (!value) {
+                              _weightController.clear();
+                            }
+                          });
+                        },
+                        activeColor: Colors.blue.shade600,
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 12),
-                _buildPlateSizeSelector(),
-                const SizedBox(height: 16),
               ],
 
               // Champ poids
               if (_useWeight) ...[
+                const SizedBox(height: 16),
                 Text(
                   'Poids (en grammes)',
                   style: TextStyle(
@@ -203,23 +252,20 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
                 TextField(
                   controller: _weightController,
                   keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                  onChanged: (value) {
-                    setState(() {});
-                  },
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  onChanged: (value) => setState(() {}),
                   decoration: InputDecoration(
                     hintText: 'Ex: 150',
                     suffixText: 'g',
+                    prefixIcon: Icon(Icons.scale, color: Colors.blue.shade600),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.green.shade300),
+                      borderSide: BorderSide(color: Colors.blue.shade300),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide:
-                          BorderSide(color: Colors.green.shade600, width: 2),
+                          BorderSide(color: Colors.blue.shade600, width: 2),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -227,39 +273,7 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
               ],
-
-              // Switch assiette/poids
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    _useWeight
-                        ? 'Revenir aux assiettes'
-                        : 'J\'ai pesé mon aliment',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Switch(
-                    value: _useWeight,
-                    onChanged: (value) {
-                      setState(() {
-                        _useWeight = value;
-                        if (value) {
-                          _selectedPlateSize = null;
-                        } else {
-                          _weightController.clear();
-                        }
-                      });
-                    },
-                    activeThumbColor: Colors.green.shade600,
-                  ),
-                ],
-              ),
 
               const SizedBox(height: 24),
 
@@ -298,9 +312,9 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
                         ),
                         disabledBackgroundColor: Colors.grey.shade300,
                       ),
-                      child: const Text(
-                        'Confirmer',
-                        style: TextStyle(
+                      child: Text(
+                        _useManualEntry ? 'Rechercher' : 'Scanner',
+                        style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
                         ),
@@ -316,106 +330,28 @@ class _PortionSelectorDialogState extends State<PortionSelectorDialog> {
     );
   }
 
-  Widget _buildPlateSizeSelector() {
-    return Column(
-      children: PlateSize.values.map((size) {
-        final isSelected = _selectedPlateSize == size;
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: InkWell(
-            onTap: () {
-              setState(() {
-                _selectedPlateSize = size;
-              });
-            },
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 14,
-              ),
-              decoration: BoxDecoration(
-                color: isSelected ? Colors.green.shade50 : Colors.grey.shade50,
-                border: Border.all(
-                  color:
-                      isSelected ? Colors.green.shade600 : Colors.grey.shade300,
-                  width: isSelected ? 2 : 1,
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    _getIconForSize(size),
-                    color: isSelected
-                        ? Colors.green.shade600
-                        : Colors.grey.shade600,
-                    size: 24,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      size.label,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight:
-                            isSelected ? FontWeight.w600 : FontWeight.w500,
-                        color: isSelected
-                            ? Colors.green.shade800
-                            : Colors.grey.shade700,
-                      ),
-                    ),
-                  ),
-                  if (isSelected)
-                    Icon(
-                      Icons.check_circle,
-                      color: Colors.green.shade600,
-                      size: 22,
-                    ),
-                ],
-              ),
-            ),
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  IconData _getIconForSize(PlateSize size) {
-    switch (size) {
-      case PlateSize.small:
-        return Icons.restaurant;
-      case PlateSize.medium:
-        return Icons.lunch_dining;
-      case PlateSize.large:
-        return Icons.dinner_dining;
-    }
-  }
-
   bool _isValid() {
-    if (_useManualEntry && _productNames.isEmpty) {
-      return false;
+    // Si saisie manuelle, au moins un produit doit être ajouté
+    if (_useManualEntry) {
+      return _productNames.isNotEmpty;
     }
 
-    if (_useWeight) {
-      final text = _weightController.text.trim();
-      if (text.isEmpty) return false;
-      final weight = int.tryParse(text);
-      return weight != null && weight > 0;
-    }
-    return _selectedPlateSize != null;
+    // Si scan photo, toujours valide (peut scanner directement)
+    return true;
   }
 
   void _onConfirm() {
     final portionInfo = PortionInfo(
-      plateSize: _useWeight ? null : _selectedPlateSize,
       weight: _useWeight && _weightController.text.isNotEmpty
           ? double.parse(_weightController.text)
           : null,
-      productName: _useManualEntry && _productNames.isNotEmpty
-          ? _productNames.join(', ')
+      productName: _useManualEntry &&
+              _productNames.isNotEmpty &&
+              _productNames.length == 1
+          ? _productNames.first
           : null,
-      productNames: _useManualEntry ? _productNames : null,
+      productNames:
+          _useManualEntry && _productNames.length > 1 ? _productNames : null,
     );
     Navigator.of(context).pop(portionInfo);
   }

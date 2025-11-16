@@ -20,11 +20,13 @@ class ScannedFoodListWidget extends StatelessWidget {
 
     // Calcul des totaux
     final totalCalories =
-        foods.fold<int>(0, (sum, food) => sum + food.calories);
+        foods.fold<double>(0.0, (sum, food) => sum + food.calories);
     final totalProteins =
         foods.fold<double>(0.0, (sum, food) => sum + food.proteins);
-    final totalCarbs = foods.fold<int>(0, (sum, food) => sum + food.carbs);
+    final totalCarbs = foods.fold<double>(0.0, (sum, food) => sum + food.carbs);
     final totalFats = foods.fold<double>(0.0, (sum, food) => sum + food.fats);
+    final totalQuantity =
+        foods.fold<double>(0.0, (sum, food) => sum + food.quantity);
 
     return Container(
       margin: const EdgeInsets.only(top: 24),
@@ -37,23 +39,32 @@ class ScannedFoodListWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Header
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Aliments ajoutés (${foods.length})',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey.shade800,
-                ),
+              Row(
+                children: [
+                  Icon(Icons.list_alt, size: 20, color: Colors.green.shade600),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Aliments ajoutés (${foods.length})',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey.shade800,
+                    ),
+                  ),
+                ],
               ),
-              TextButton(
+              TextButton.icon(
                 onPressed: () {
                   context.read<ScanBloc>().add(ClearFoodList());
                 },
-                child: Text(
-                  'Tout supprimer',
+                icon: Icon(Icons.delete_sweep,
+                    size: 18, color: Colors.red.shade600),
+                label: Text(
+                  'Effacer',
                   style: TextStyle(
                     color: Colors.red.shade600,
                     fontSize: 13,
@@ -62,7 +73,10 @@ class ScannedFoodListWidget extends StatelessWidget {
               ),
             ],
           ),
+
           const SizedBox(height: 12),
+
+          // Liste des aliments
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -79,6 +93,22 @@ class ScannedFoodListWidget extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
+                    // Icône selon le groupe
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: food.groupColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        food.groupIcon,
+                        color: food.groupColor,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+
+                    // Informations
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,21 +119,51 @@ class ScannedFoodListWidget extends StatelessWidget {
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              if (food.groupe.isNotEmpty) ...[
+                                Text(
+                                  food.groupe,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                                Text(
+                                  ' • ',
+                                  style: TextStyle(color: Colors.grey.shade400),
+                                ),
+                              ],
+                              Text(
+                                '${food.quantity.toStringAsFixed(0)}g',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey.shade600,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
                           Text(
-                            '${food.calories} kcal • ${food.proteins}g protéines',
+                            '${food.calories.toStringAsFixed(0)} kcal • ${food.proteins.toStringAsFixed(1)}g prot.',
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 11,
                               color: Colors.grey.shade600,
                             ),
                           ),
                         ],
                       ),
                     ),
+
+                    // Bouton supprimer
                     IconButton(
-                      icon: Icon(Icons.delete_outline,
-                          color: Colors.red.shade400),
+                      icon: Icon(Icons.close,
+                          color: Colors.red.shade400, size: 20),
                       onPressed: () {
                         context.read<ScanBloc>().add(RemoveFoodFromList(index));
                       },
@@ -113,7 +173,10 @@ class ScannedFoodListWidget extends StatelessWidget {
               );
             },
           ),
+
           const Divider(height: 24),
+
+          // Totaux
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -122,22 +185,40 @@ class ScannedFoodListWidget extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Text(
-                  'Total',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green.shade800,
-                  ),
+                Row(
+                  children: [
+                    Icon(Icons.calculate,
+                        size: 16, color: Colors.green.shade700),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Total',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green.shade800,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      '${totalQuantity.toStringAsFixed(0)}g',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey.shade600,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildTotalItem('Calories', '$totalCalories', 'kcal'),
+                    _buildTotalItem(
+                        'Calories', totalCalories.toStringAsFixed(0), 'kcal'),
                     _buildTotalItem(
                         'Protéines', totalProteins.toStringAsFixed(1), 'g'),
-                    _buildTotalItem('Glucides', '$totalCarbs', 'g'),
+                    _buildTotalItem(
+                        'Glucides', totalCarbs.toStringAsFixed(1), 'g'),
                     _buildTotalItem(
                         'Lipides', totalFats.toStringAsFixed(1), 'g'),
                   ],

@@ -43,7 +43,8 @@ class ScanButton extends StatelessWidget {
           const SizedBox(height: 12),
           // Bouton "Scanner un autre aliment"
           OutlinedButton(
-            onPressed: state is ScanLoading ? null : () => _handleScan(context),
+            onPressed:
+                state is ScanLoading ? null : () => _scanDirectly(context),
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.green.shade600,
               padding: const EdgeInsets.symmetric(
@@ -67,42 +68,74 @@ class ScanButton extends StatelessWidget {
       );
     }
 
-    // Sinon, afficher le bouton de scan normal
-    return ElevatedButton(
-      onPressed: state is ScanLoading ? null : () => _handleScan(context),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.green.shade600,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 40,
-          vertical: 18,
+    // Sinon, afficher les boutons de scan
+    return Column(
+      children: [
+        // Bouton principal : Scanner directement (sans dialog)
+        ElevatedButton.icon(
+          onPressed: state is ScanLoading ? null : () => _scanDirectly(context),
+          icon: const Icon(Icons.camera_alt, size: 24),
+          label: const Text('Scanner avec la caméra'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green.shade600,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 40,
+              vertical: 18,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            elevation: 8,
+          ),
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+
+        const SizedBox(height: 12),
+
+        // Bouton secondaire : Options (avec dialog)
+        OutlinedButton.icon(
+          onPressed:
+              state is ScanLoading ? null : () => _showOptionsDialog(context),
+          icon: const Icon(Icons.tune, size: 20),
+          label: const Text('Options de scan'),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: Colors.green.shade600,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 32,
+              vertical: 14,
+            ),
+            side: BorderSide(color: Colors.green.shade600, width: 2),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
         ),
-        elevation: 8,
-      ),
-      child: const Text(
-        'Scanner un aliment',
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+      ],
     );
   }
 
-  Future<void> _handleScan(BuildContext context) async {
+  /// Scan direct sans dialog (caméra immédiate)
+  Future<void> _scanDirectly(BuildContext context) async {
     if (state is ScanSuccess) {
       context.read<ScanBloc>().add(ResetScan());
       await Future.delayed(const Duration(milliseconds: 100));
-      await _showPortionDialogAndScan(context);
-    } else {
-      await _showPortionDialogAndScan(context);
+    }
+
+    // Scanner directement sans dialog
+    if (context.mounted) {
+      context.read<ScanBloc>().add(
+            ScanFood(portionInfo: null), // null = scan photo simple
+          );
     }
   }
 
-  Future<void> _showPortionDialogAndScan(BuildContext context) async {
+  /// Afficher le dialog avec options (saisie manuelle, poids, etc.)
+  Future<void> _showOptionsDialog(BuildContext context) async {
+    if (state is ScanSuccess) {
+      context.read<ScanBloc>().add(ResetScan());
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+
     final portionInfo = await showDialog<PortionInfo>(
       context: context,
       builder: (context) => const PortionSelectorDialog(),
