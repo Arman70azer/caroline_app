@@ -21,7 +21,7 @@ class _MainScreenState extends State<MainScreen> {
   ];
 
   final List<Widget> _screens = const [
-    ScanScreen(),
+    ModernScanScreen(),
     ProfileScreen(),
     ProgramsScreen(),
   ];

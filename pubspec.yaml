@@ -39,6 +39,9 @@ dependencies:
   shared_preferences: ^2.5.3
   http: ^1.5.0
   image_picker: ^1.2.0
+  flutter_animate: ^4.5.2
+  shimmer: ^3.0.0
+  iconsax: ^0.0.8
 
 dev_dependencies:
   flutter_test:

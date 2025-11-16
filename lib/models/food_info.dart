@@ -104,8 +104,9 @@ class FoodInfo {
     final groupeLower = groupe.toLowerCase();
     if (groupeLower.contains('fruit')) return Icons.apple;
     if (groupeLower.contains('légume')) return Icons.eco;
-    if (groupeLower.contains('viande')) return Icons.lunch_dining;
-    if (groupeLower.contains('poisson')) return Icons.set_meal;
+    if (groupeLower.contains('poisson') | groupeLower.contains('viande')) {
+      return Icons.set_meal;
+    }
     if (groupeLower.contains('céréale') || groupeLower.contains('pain')) {
       return Icons.bakery_dining;
     }
