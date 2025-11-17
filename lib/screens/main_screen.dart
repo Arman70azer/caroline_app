@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../config/colors.dart';
 import '../utils/app_sections.dart';
+import '../widgets/compact_header.dart';
 import 'scan_screen/scan_screen.dart';
 import 'profile_screen/profile_screen.dart';
 import 'programs_screen.dart';
@@ -13,6 +15,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
+  late PageController _pageController;
 
   final List<AppSection> _sections = const [
     AppSection(id: 'scan', icon: Icons.camera_alt, label: 'Scanner'),
@@ -27,34 +30,77 @@ class _MainScreenState extends State<MainScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _currentIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _onPageChanged(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  void _onNavBarTap(int index) {
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentIndex],
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Column(
+          children: [
+            const CompactHeader(),
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: _onPageChanged,
+                physics: const BouncingScrollPhysics(),
+                children: _screens,
+              ),
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
+          color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -5),
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 12,
+              offset: const Offset(0, -4),
             ),
           ],
         ),
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
-          onTap: (index) => setState(() => _currentIndex = index),
+          onTap: _onNavBarTap,
           type: BottomNavigationBarType.fixed,
-          selectedItemColor: Colors.green.shade600,
-          unselectedItemColor: Colors.grey.shade500,
+          selectedItemColor: AppColors.primaryGreen,
+          unselectedItemColor: AppColors.textSecondary,
           selectedFontSize: 12,
           unselectedFontSize: 12,
-          items: [
-            ..._sections.map((section) => BottomNavigationBarItem(
-                  icon: Icon(section.icon),
-                  label: section.label,
-                )),
-            //Ici pour rajouter des sections
-          ],
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          items: _sections
+              .map((section) => BottomNavigationBarItem(
+                    icon: Icon(section.icon),
+                    label: section.label,
+                  ))
+              .toList(),
         ),
       ),
     );

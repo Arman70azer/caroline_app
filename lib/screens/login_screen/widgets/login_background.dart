@@ -19,7 +19,7 @@ class LoginBackground extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             AppColors.primaryGreen,
-            AppColors.limeGreen,
+            AppColors.carbsColor,
             AppColors.lightGreen,
           ],
           stops: [0.0, 0.5, 1.0],

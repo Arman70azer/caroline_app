@@ -24,17 +24,30 @@ class CompactHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.eco_rounded,
-            color: AppColors.primaryGreen,
-            size: 24,
+          // Logo image
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.asset(
+              'assets/logo.png',
+              width: 32,
+              height: 32,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                // Fallback en cas d'erreur de chargement
+                return Icon(
+                  Icons.eco_rounded,
+                  color: AppColors.primaryGreen,
+                  size: 24,
+                );
+              },
+            ),
           ),
           const SizedBox(width: 12),
           Text(
-            'NutriSport',
+            'LONGEVEATING',
             style: TextStyle(
               fontSize: 20,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
               color: AppColors.textPrimary,
             ),
           ),

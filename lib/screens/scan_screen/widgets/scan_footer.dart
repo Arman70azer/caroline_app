@@ -11,19 +11,6 @@ class ScanFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (state is ScanSuccess) {
-      return Padding(
-        padding: const EdgeInsets.only(top: 16),
-        child: Text(
-          'API: http://monserver.com/scan',
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade500,
-          ),
-        ),
-      );
-    }
-
     if (state is ScanError) {
       return Padding(
         padding: const EdgeInsets.only(top: 16),

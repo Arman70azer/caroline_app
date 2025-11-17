@@ -219,7 +219,7 @@ class ModernScannedList extends StatelessWidget {
               ),
               Expanded(
                 child: _buildTotalItem('Glucides', carbs.toStringAsFixed(1),
-                    'g', AppColors.limeGreen),
+                    'g', AppColors.carbsColor),
               ),
               Expanded(
                 child: _buildTotalItem('Lipides', fats.toStringAsFixed(1), 'g',

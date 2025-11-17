@@ -27,7 +27,7 @@ class ModernActionButtons extends StatelessWidget {
   Widget _buildSuccessButtons(BuildContext context) {
     return Column(
       children: [
-        // Bouton principal : Ajouter
+        // Bouton principal : Ajouter à la liste
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
@@ -49,34 +49,75 @@ class ModernActionButtons extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              elevation: 4,
+              elevation: 2,
+              shadowColor: AppColors.primaryGreen.withOpacity(0.3),
             ),
           ),
         ),
+
         const SizedBox(height: 12),
-        // Bouton secondaire : Rescanner
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-            onPressed:
-                state is ScanLoading ? null : () => _scanDirectly(context),
-            icon: const Icon(Icons.refresh_rounded, size: 20),
-            label: const Text(
-              'Scanner un autre aliment',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
+
+        // Boutons secondaires (côte à côte)
+        Row(
+          children: [
+            // Bouton Passer
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  context.read<ScanBloc>().add(ResetScan());
+                },
+                icon: const Icon(Icons.skip_next_rounded, size: 20),
+                label: const Text(
+                  'Passer',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.darkGrey,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  side: BorderSide(
+                    color: AppColors.mediumGrey,
+                    width: 1.5,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
               ),
             ),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.primaryGreen,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              side: BorderSide(color: AppColors.primaryGreen, width: 2),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+
+            const SizedBox(width: 12),
+
+            // Bouton Options
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: state is ScanLoading
+                    ? null
+                    : () => _showOptionsDialog(context),
+                icon: const Icon(Icons.tune_rounded, size: 20),
+                label: const Text(
+                  'Options',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.primaryPurple,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  side: BorderSide(
+                    color: AppColors.primaryPurple,
+                    width: 1.5,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ],
     );
@@ -85,34 +126,7 @@ class ModernActionButtons extends StatelessWidget {
   Widget _buildScanButtons(BuildContext context) {
     return Column(
       children: [
-        // Bouton principal : Scanner
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton.icon(
-            onPressed:
-                state is ScanLoading ? null : () => _scanDirectly(context),
-            icon: const Icon(Icons.camera_alt_rounded, size: 22),
-            label: const Text(
-              'Scanner avec la caméra',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryGreen,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 18),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              elevation: 4,
-              disabledBackgroundColor: AppColors.mediumGrey,
-            ),
-          ),
-        ),
-        const SizedBox(height: 12),
-        // Bouton secondaire : Options
+        // Bouton unique : Options de scan
         SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(
@@ -127,9 +141,12 @@ class ModernActionButtons extends StatelessWidget {
               ),
             ),
             style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.primaryGreen,
+              foregroundColor: AppColors.primaryPurple,
               padding: const EdgeInsets.symmetric(vertical: 16),
-              side: BorderSide(color: AppColors.primaryGreen, width: 2),
+              side: BorderSide(
+                color: AppColors.primaryPurple,
+                width: 1.5,
+              ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -140,32 +157,26 @@ class ModernActionButtons extends StatelessWidget {
     );
   }
 
-  Future<void> _scanDirectly(BuildContext context) async {
-    if (state is ScanSuccess) {
-      context.read<ScanBloc>().add(ResetScan());
-      await Future.delayed(const Duration(milliseconds: 100));
-    }
-
-    if (context.mounted) {
-      context.read<ScanBloc>().add(ScanFood(portionInfo: null));
-    }
-  }
-
   Future<void> _showOptionsDialog(BuildContext context) async {
+    // Capturer le BuildContext avant l'opération async
+    final scanBloc = context.read<ScanBloc>();
+
     if (state is ScanSuccess) {
-      context.read<ScanBloc>().add(ResetScan());
+      scanBloc.add(ResetScan());
       await Future.delayed(const Duration(milliseconds: 100));
     }
+
+    // Vérifier que le widget est toujours monté
+    if (!context.mounted) return;
 
     final portionInfo = await showDialog<PortionInfo>(
       context: context,
       builder: (context) => const PortionSelectorDialog(),
     );
 
+    // Vérifier à nouveau après le dialog
     if (portionInfo != null && portionInfo.isValid) {
-      if (context.mounted) {
-        context.read<ScanBloc>().add(ScanFood(portionInfo: portionInfo));
-      }
+      scanBloc.add(ScanFood(portionInfo: portionInfo));
     }
   }
 }

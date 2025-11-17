@@ -5,7 +5,6 @@ import '../../blocs/scan/scan_state.dart';
 import '../../config/colors.dart';
 import '../../models/food_info.dart';
 import '../../widgets/app_notification.dart';
-import '../../widgets/compact_header.dart';
 import 'widgets/modern_scanner_zone.dart';
 import 'widgets/scan_button.dart';
 import 'widgets/modern_result_card.dart';
@@ -21,7 +20,6 @@ class ModernScanScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const CompactHeader(),
             Expanded(
               child: BlocListener<ScanBloc, ScanState>(
                 listener: (context, state) {

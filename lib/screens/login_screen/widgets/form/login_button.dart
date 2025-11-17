@@ -15,7 +15,7 @@ class LoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: AppColors.greenGradient,
+        gradient: AppColors.logoGradient,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(

@@ -149,7 +149,7 @@ class ModernResultCard extends StatelessWidget {
             label: 'Glucides',
             value: food.carbs.toStringAsFixed(1),
             unit: 'g',
-            color: AppColors.limeGreen,
+            color: AppColors.carbsColor,
             icon: Icons.grain_rounded,
           ),
           MacroCard(

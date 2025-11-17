@@ -5,7 +5,6 @@ import '../../blocs/profile/profile_bloc.dart';
 import '../../blocs/profile/profile_event.dart';
 import '../../blocs/profile/profile_state.dart';
 import '../../config/colors.dart';
-import '../../widgets/compact_header.dart';
 import 'widgets/profile_widgets.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -33,7 +32,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            const CompactHeader(),
             Expanded(
               child: BlocBuilder<ProfileBloc, ProfileState>(
                 builder: (context, state) {

@@ -4,7 +4,6 @@ import '../blocs/programs/programs_bloc.dart';
 import '../blocs/programs/programs_event.dart';
 import '../blocs/programs/programs_state.dart';
 import '../widgets/program_card.dart';
-import '../widgets/compact_header.dart';
 
 class ProgramsScreen extends StatelessWidget {
   const ProgramsScreen({super.key});
@@ -22,7 +21,6 @@ class ProgramsScreen extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
-            const CompactHeader(),
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
