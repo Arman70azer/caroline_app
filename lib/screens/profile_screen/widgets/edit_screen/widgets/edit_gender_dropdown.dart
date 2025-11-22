@@ -13,7 +13,7 @@ class EditGenderDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
-      value: value,
+      initialValue: value,
       decoration: InputDecoration(
         labelText: 'Genre',
         prefixIcon: Icon(Icons.wc, color: Colors.green.shade600),
