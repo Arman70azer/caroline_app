@@ -35,14 +35,18 @@ class ModernScanScreen extends StatelessWidget {
                 child: BlocBuilder<ScanBloc, ScanState>(
                   builder: (context, state) {
                     final scannedFoods = _getScannedFoods(state);
+                    final hasResult = state is ScanSuccess; // NOUVEAU
 
                     return SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
                       padding: const EdgeInsets.all(24),
                       child: Column(
                         children: [
-                          ModernScannerZone(state: state),
-                          const SizedBox(height: 32),
+                          // MODIFIÉ: Cacher le scanner si on a un résultat
+                          if (!hasResult) ...[
+                            ModernScannerZone(state: state),
+                            const SizedBox(height: 32),
+                          ],
                           ModernActionButtons(state: state),
                           const SizedBox(height: 24),
                           if (state is ScanSuccess)

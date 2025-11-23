@@ -61,18 +61,12 @@ class _ProfileEditModalState extends State<ProfileEditModal> {
   }
 
   void _saveProfile() {
-    print('🔵 _saveProfile appelé');
-
     if (!_formKey.currentState!.validate()) {
-      print('🔴 Validation échouée');
       return;
     }
 
-    print('✅ Validation réussie');
-
     try {
       final bloc = widget.parentContext.read<ProfileBloc>();
-      print('🔵 Bloc récupéré: $bloc');
 
       final updateEvent = UpdateProfile(
         name: _nameController.text.trim(),
@@ -91,10 +85,7 @@ class _ProfileEditModalState extends State<ProfileEditModal> {
             ? _passwordController.text
             : null,
       );
-
-      print('🔵 Event créé: ${updateEvent.name} ${updateEvent.surname}');
       bloc.add(updateEvent);
-      print('✅ Event ajouté au bloc');
     } catch (e) {
       print('🔴 Erreur lors de l\'ajout de l\'event: $e');
     }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../config/colors.dart';
 import '../../../models/food_info.dart';
 import 'macro_card.dart';
+import 'recommendation_card.dart';
 
 class ModernResultCard extends StatelessWidget {
   final FoodInfo food;
@@ -13,35 +14,43 @@ class ModernResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border(
-          left: BorderSide(
-            color: AppColors.primaryGreen,
-            width: 4,
+    return Column(
+      children: [
+        if (food.recommended != null)
+          RecommendationCard(recommendation: food.recommended!),
+
+        // Carte d'informations nutritionnelles
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(20),
+            border: Border(
+              left: BorderSide(
+                color: AppColors.primaryGreen,
+                width: 4,
+              ),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              _buildHeader(),
+              Divider(height: 1, color: AppColors.border),
+              _buildMacrosGrid(),
+              if (food.ingredients.isNotEmpty) ...[
+                Divider(height: 1, color: AppColors.border),
+                _buildIngredients(),
+              ],
+            ],
           ),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          _buildHeader(),
-          Divider(height: 1, color: AppColors.border),
-          _buildMacrosGrid(),
-          if (food.ingredients.isNotEmpty) ...[
-            Divider(height: 1, color: AppColors.border),
-            _buildIngredients(),
-          ],
-        ],
-      ),
+      ],
     );
   }
 

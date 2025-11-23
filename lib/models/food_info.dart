@@ -10,6 +10,7 @@ class FoodInfo {
   final double fats;
   final double quantity; // Quantité en grammes
   final List<FoodIngredient> ingredients;
+  final Recommendation? recommended; // NOUVEAU
 
   const FoodInfo({
     required this.name,
@@ -20,6 +21,7 @@ class FoodInfo {
     required this.fats,
     required this.quantity,
     this.ingredients = const [],
+    this.recommended, // NOUVEAU
   });
 
   /// Crée une instance depuis un JSON (backend response)
@@ -36,6 +38,9 @@ class FoodInfo {
               ?.map((i) => FoodIngredient.fromJson(i as Map<String, dynamic>))
               .toList() ??
           [],
+      recommended: json['recommended'] != null
+          ? Recommendation.fromJson(json['recommended'] as Map<String, dynamic>)
+          : null, // NOUVEAU
     );
   }
 
@@ -50,6 +55,7 @@ class FoodInfo {
       'fats': fats,
       'quantity': quantity,
       'ingredients': ingredients.map((i) => i.toJson()).toList(),
+      if (recommended != null) 'recommended': recommended!.toJson(), // NOUVEAU
     };
   }
 
@@ -63,6 +69,7 @@ class FoodInfo {
     double? fats,
     double? quantity,
     List<FoodIngredient>? ingredients,
+    Recommendation? recommended, // NOUVEAU
   }) {
     return FoodInfo(
       name: name ?? this.name,
@@ -73,6 +80,7 @@ class FoodInfo {
       fats: fats ?? this.fats,
       quantity: quantity ?? this.quantity,
       ingredients: ingredients ?? this.ingredients,
+      recommended: recommended ?? this.recommended, // NOUVEAU
     );
   }
 
@@ -134,6 +142,31 @@ class FoodInfo {
     }
     if (groupeLower.contains('plat')) return Colors.purple;
     return Colors.grey;
+  }
+}
+
+/// NOUVEAU: Modèle pour la recommandation
+class Recommendation {
+  final bool accept;
+  final String message;
+
+  const Recommendation({
+    required this.accept,
+    required this.message,
+  });
+
+  factory Recommendation.fromJson(Map<String, dynamic> json) {
+    return Recommendation(
+      accept: json['accept'] as bool? ?? false,
+      message: json['message'] as String? ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'accept': accept,
+      'message': message,
+    };
   }
 }
 

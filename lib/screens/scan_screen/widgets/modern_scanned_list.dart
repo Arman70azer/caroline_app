@@ -4,6 +4,7 @@ import '../../../blocs/scan/scan_bloc.dart';
 import '../../../blocs/scan/scan_event.dart';
 import '../../../config/colors.dart';
 import '../../../models/food_info.dart';
+import 'food_detail_modal.dart'; // NOUVEAU
 
 class ModernScannedList extends StatelessWidget {
   final List<FoodInfo> foods;
@@ -100,68 +101,90 @@ class ModernScannedList extends StatelessWidget {
       separatorBuilder: (context, index) => const SizedBox(height: 8),
       itemBuilder: (context, index) {
         final food = foods[index];
-        return Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: AppColors.lightGrey,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: food.groupColor.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  food.groupIcon,
-                  color: food.groupColor,
-                  size: 20,
-                ),
+        return GestureDetector(
+          // NOUVEAU: Ouvrir la modale au clic
+          onTap: () => FoodDetailModal.show(context, food),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.lightGrey,
+              borderRadius: BorderRadius.circular(12),
+              // NOUVEAU: Effet hover/tap
+              border: Border.all(
+                color: Colors.transparent,
+                width: 2,
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      food.name,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: food.groupColor.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    food.groupIcon,
+                    color: food.groupColor,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              food.name,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textPrimary,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          // NOUVEAU: Indicateur cliquable
+                          Icon(
+                            Icons.info_outline_rounded,
+                            size: 16,
+                            color: AppColors.primaryBlue,
+                          ),
+                        ],
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${food.quantity.toInt()}g • ${food.calories.toInt()} kcal • ${food.proteins.toStringAsFixed(1)}g prot.',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: AppColors.textSecondary,
+                      const SizedBox(height: 4),
+                      Text(
+                        '${food.quantity.toInt()}g • ${food.calories.toInt()} kcal • ${food.proteins.toStringAsFixed(1)}g prot.',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: AppColors.textSecondary,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              IconButton(
-                icon:
-                    Icon(Icons.close_rounded, color: AppColors.error, size: 20),
-                onPressed: () {
-                  context.read<ScanBloc>().add(RemoveFoodFromList(index));
-                },
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(
-                  minWidth: 32,
-                  minHeight: 32,
+                const SizedBox(width: 8),
+                // Bouton supprimer
+                IconButton(
+                  icon: Icon(Icons.close_rounded,
+                      color: AppColors.error, size: 20),
+                  onPressed: () {
+                    context.read<ScanBloc>().add(RemoveFoodFromList(index));
+                  },
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(
+                    minWidth: 32,
+                    minHeight: 32,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
