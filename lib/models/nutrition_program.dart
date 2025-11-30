@@ -53,9 +53,12 @@ class NutritionProgram {
   // Helper pour afficher la période du programme
   String getPeriodDisplay() {
     if (dateStart != null && dateEnd != null) {
-      return '$dateStart - $dateEnd';
+      final start = getFormattedDate(isStart: true);
+      final end = getFormattedDate(isStart: false);
+      return 'Du $start au $end';
     } else if (dateStart != null) {
-      return 'À partir du $dateStart';
+      final start = getFormattedDate(isStart: true);
+      return 'À partir du $start';
     }
     return 'Pas de dates définies';
   }
@@ -91,5 +94,23 @@ class NutritionProgram {
     }
     // Format ISO par défaut
     return DateTime.parse(date);
+  }
+
+  /// Transforme une date du format YYYY-MM-DD en DD-MM-YYYY
+  String formatDateToFrench(String? date) {
+    if (date == null || date.isEmpty) return '';
+    try {
+      final parts = date.split('-'); // [YYYY, MM, DD]
+      if (parts.length != 3) return date;
+      return '${parts[2]}/${parts[1]}/${parts[0]}';
+    } catch (_) {
+      return date;
+    }
+  }
+
+  /// Récupère la date formatée selon si c'est start ou end
+  String getFormattedDate({required bool isStart}) {
+    final date = isStart ? dateStart : dateEnd;
+    return formatDateToFrench(date);
   }
 }

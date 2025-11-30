@@ -22,15 +22,6 @@ class ProgramCard extends StatefulWidget {
 class _ProgramCardState extends State<ProgramCard> {
   bool _isPressed = false;
 
-  String _getPeriodDisplay() {
-    if (widget.program.dateStart != null && widget.program.dateEnd != null) {
-      return 'Du ${widget.program.dateStart} au ${widget.program.dateEnd}';
-    } else if (widget.program.dateStart != null) {
-      return 'Début ${widget.program.dateStart}';
-    }
-    return 'Pas de dates';
-  }
-
   bool _isActive() {
     if (widget.program.dateStart == null) return true;
 
@@ -250,7 +241,7 @@ class _ProgramCardState extends State<ProgramCard> {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          _getPeriodDisplay(),
+                          widget.program.getPeriodDisplay(),
                           style: const TextStyle(
                             fontSize: 13,
                             color: AppColors.textSecondary,
@@ -278,13 +269,15 @@ class _ProgramCardState extends State<ProgramCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Bloc description avec fade si nécessaire
                       DescriptionWithFade(
                         description: widget.program.description,
-                        maxHeight: 90, // seuil pour le dégradé
+                        maxHeight: 90,
                       ),
+
+                      // "Voir plus…" juste après le texte
                       const Padding(
-                        padding:
-                            EdgeInsets.only(left: 16, right: 16, bottom: 0),
+                        padding: EdgeInsets.only(top: 4), // rapprocher le texte
                         child: Text(
                           "Voir plus…",
                           style: TextStyle(

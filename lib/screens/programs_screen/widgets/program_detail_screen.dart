@@ -41,15 +41,6 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
     }
   }
 
-  String _getPeriodDisplay() {
-    if (widget.program.dateStart != null && widget.program.dateEnd != null) {
-      return '${widget.program.dateStart} - ${widget.program.dateEnd}';
-    } else if (widget.program.dateStart != null) {
-      return 'À partir du ${widget.program.dateStart}';
-    }
-    return 'Pas de dates définies';
-  }
-
   bool _isActive() {
     if (widget.program.dateStart == null) return true;
 
@@ -206,7 +197,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              _getPeriodDisplay(),
+                              widget.program.getPeriodDisplay(),
                               style: const TextStyle(
                                 fontSize: 15,
                                 color: AppColors.textPrimary,

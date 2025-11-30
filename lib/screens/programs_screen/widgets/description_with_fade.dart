@@ -37,15 +37,14 @@ class _DescriptionWithFadeState extends State<DescriptionWithFade> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Stack(
-          children: [
-            // Texte
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: widget.maxHeight,
-              ),
+    return Stack(
+      children: [
+        // Clip et limite la hauteur pour éviter l'overflow
+        ClipRect(
+          child: SizedBox(
+            height: widget.maxHeight,
+            child: SingleChildScrollView(
+              physics: const NeverScrollableScrollPhysics(),
               child: MarkdownBody(
                 key: _key,
                 data: widget.description,
@@ -77,32 +76,32 @@ class _DescriptionWithFadeState extends State<DescriptionWithFade> {
                 ),
               ),
             ),
+          ),
+        ),
 
-            // Dégradé uniquement si nécessaire et uniquement en bas
-            if (_needsFade)
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: 40,
-                child: IgnorePointer(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.white.withValues(alpha: 0.0),
-                          Colors.white.withValues(alpha: 1.0),
-                        ],
-                      ),
-                    ),
+        // Dégradé uniquement si nécessaire
+        if (_needsFade)
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 40,
+            child: IgnorePointer(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.white.withValues(alpha: 0.0),
+                      Colors.white.withValues(alpha: 1.0),
+                    ],
                   ),
                 ),
               ),
-          ],
-        );
-      },
+            ),
+          ),
+      ],
     );
   }
 }
