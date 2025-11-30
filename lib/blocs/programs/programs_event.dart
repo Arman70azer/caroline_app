@@ -1,5 +1,7 @@
 abstract class ProgramsEvent {}
 
-class LoadPrograms extends ProgramsEvent {}
+class LoadPrograms extends ProgramsEvent {
+  final bool forceRefresh;
 
-class AddProgram extends ProgramsEvent {}
+  LoadPrograms({this.forceRefresh = false});
+}

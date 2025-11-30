@@ -4,7 +4,7 @@ import '../utils/app_sections.dart';
 import '../widgets/compact_header.dart';
 import 'scan_screen/scan_screen.dart';
 import 'profile_screen/profile_screen.dart';
-import 'programs_screen.dart';
+import 'programs_screen/programs_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
