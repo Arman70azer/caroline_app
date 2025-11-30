@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'description_with_fade.dart';
-import '../../../models/nutrition_program.dart';
-import '../../../config/colors.dart';
-import 'program_media_gallery.dart';
+import '../../../../models/nutrition_program.dart';
+import '../../../../config/colors.dart';
+import 'media_gallery/media_gallery.dart';
 import 'program_detail_screen.dart';
 
 class ProgramCard extends StatefulWidget {
   final NutritionProgram program;
-  final bool isFirst;
 
   const ProgramCard({
     super.key,
     required this.program,
-    this.isFirst = false,
   });
 
   @override
@@ -21,36 +19,6 @@ class ProgramCard extends StatefulWidget {
 
 class _ProgramCardState extends State<ProgramCard> {
   bool _isPressed = false;
-
-  bool _isActive() {
-    if (widget.program.dateStart == null) return true;
-
-    try {
-      final start = _parseDate(widget.program.dateStart!);
-      final now = DateTime.now();
-
-      if (widget.program.dateEnd != null) {
-        final end = _parseDate(widget.program.dateEnd!);
-        return now.isAfter(start) && now.isBefore(end);
-      }
-
-      return now.isAfter(start);
-    } catch (e) {
-      return true;
-    }
-  }
-
-  DateTime _parseDate(String date) {
-    if (date.contains('-') && date.split('-')[0].length == 2) {
-      final parts = date.split('-');
-      return DateTime(
-        int.parse(parts[2]),
-        int.parse(parts[1]),
-        int.parse(parts[0]),
-      );
-    }
-    return DateTime.parse(date);
-  }
 
   void _navigateToDetails() {
     if (!mounted) return;
@@ -86,7 +54,6 @@ class _ProgramCardState extends State<ProgramCard> {
   @override
   Widget build(BuildContext context) {
     final hasImages = widget.program.medias.any((m) => m.isImage);
-    final isActive = _isActive();
 
     return GestureDetector(
       onTapDown: (_) => setState(() => _isPressed = true),
@@ -103,10 +70,7 @@ class _ProgramCardState extends State<ProgramCard> {
           decoration: BoxDecoration(
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: widget.isFirst ? AppColors.primaryGreen : AppColors.border,
-              width: widget.isFirst ? 1.5 : 1,
-            ),
+            border: Border.all(color: AppColors.primaryGreen, width: 1.5),
             boxShadow: [
               if (!_isPressed)
                 BoxShadow(
@@ -132,44 +96,6 @@ class _ProgramCardState extends State<ProgramCard> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Badge "Programme principal" si isFirst
-                              if (widget.isFirst) ...[
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.emeraldPale,
-                                    borderRadius: BorderRadius.circular(6),
-                                    border: Border.all(
-                                      color: AppColors.primaryGreen,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.star_rounded,
-                                        size: 14,
-                                        color: AppColors.primaryGreen,
-                                      ),
-                                      const SizedBox(width: 4),
-                                      const Text(
-                                        'Principal',
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w700,
-                                          color: AppColors.darkGreen,
-                                          letterSpacing: 0.3,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                              ],
                               // Titre
                               Text(
                                 widget.program.title,
@@ -187,45 +113,6 @@ class _ProgramCardState extends State<ProgramCard> {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        // Badge "Actif"
-                        if (isActive)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.emeraldPale,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: AppColors.primaryGreen,
-                                width: 1,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: 6,
-                                  height: 6,
-                                  decoration: const BoxDecoration(
-                                    color: AppColors.primaryGreen,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                                const SizedBox(width: 6),
-                                const Text(
-                                  'Actif',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.darkGreen,
-                                    letterSpacing: 0.2,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
                       ],
                     ),
 
@@ -298,7 +185,7 @@ class _ProgramCardState extends State<ProgramCard> {
               if (hasImages) ...[
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                  child: ProgramMediaGallery(
+                  child: MediaGallery(
                     medias: widget.program.medias,
                     height: 90,
                   ),

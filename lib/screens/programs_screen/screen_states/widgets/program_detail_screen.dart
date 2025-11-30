@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
-import '../../../models/nutrition_program.dart';
-import '../../../config/colors.dart';
-import 'program_media_gallery.dart';
+import '../../../../models/nutrition_program.dart';
+import '../../../../config/colors.dart';
+import 'media_gallery/media_gallery.dart';
 
 class ProgramDetailScreen extends StatefulWidget {
   final NutritionProgram program;
@@ -311,7 +311,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                           ],
                         ),
                         const SizedBox(height: 16),
-                        ProgramMediaGallery(
+                        MediaGallery(
                           medias: widget.program.medias,
                           height: 160,
                         ),

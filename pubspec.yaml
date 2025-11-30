@@ -43,6 +43,8 @@ dependencies:
   shimmer: ^3.0.0
   iconsax: ^0.0.8
   flutter_markdown_plus: ^1.0.5
+  video_player: ^2.10.1
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
