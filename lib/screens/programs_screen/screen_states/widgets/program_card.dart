@@ -122,9 +122,9 @@ class _ProgramCardState extends State<ProgramCard> {
                     Row(
                       children: [
                         Icon(
-                          Icons.calendar_today_rounded,
+                          Icons.calendar_month_rounded,
                           size: 14,
-                          color: AppColors.textHint,
+                          color: AppColors.primaryGreen,
                         ),
                         const SizedBox(width: 6),
                         Text(

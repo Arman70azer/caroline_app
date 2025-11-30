@@ -249,77 +249,6 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                   ),
                 ),
 
-                // Fichiers joints
-                if (widget.program.medias.isNotEmpty) ...[
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: AppColors.lightGrey,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.attach_file_rounded,
-                          size: 18,
-                          color: AppColors.textSecondary,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '${widget.program.medias.length} fichier${widget.program.medias.length > 1 ? 's' : ''} joint${widget.program.medias.length > 1 ? 's' : ''}',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: AppColors.textSecondary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-
-                // Galerie d'images
-                if (hasImages) ...[
-                  const SizedBox(height: 32),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 3,
-                              height: 20,
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryPurple,
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            const Text(
-                              'Galerie',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.textPrimary,
-                                letterSpacing: -0.5,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        MediaGallery(
-                          medias: widget.program.medias,
-                          height: 160,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-
                 // Description
                 if (widget.program.description.isNotEmpty) ...[
                   const SizedBox(height: 32),
@@ -450,6 +379,77 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                               ),
                             ),
                           ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+
+                // Fichiers joints
+                if (widget.program.medias.isNotEmpty) ...[
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(24, 12, 24, 0),
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: AppColors.lightGrey,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.attach_file_rounded,
+                          size: 18,
+                          color: AppColors.textSecondary,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          '${widget.program.medias.length} fichier${widget.program.medias.length > 1 ? 's' : ''} joint${widget.program.medias.length > 1 ? 's' : ''}',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: AppColors.textSecondary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+
+                // Galerie d'images
+                if (hasImages) ...[
+                  const SizedBox(height: 32),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 3,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryPurple,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            const Text(
+                              'Fichiers joints',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.textPrimary,
+                                letterSpacing: -0.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        MediaGallery(
+                          medias: widget.program.medias,
+                          height: 160,
                         ),
                       ],
                     ),
