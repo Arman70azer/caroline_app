@@ -28,7 +28,7 @@ class ModernScanScreen extends StatelessWidget {
                   } else if (state is ScanSuccess) {
                     AppNotification.showSuccess(
                       context,
-                      '✅ ${state.food.name} scanné avec succès !',
+                      '${state.food.name} scanné avec succès !',
                     );
                   }
                 },
